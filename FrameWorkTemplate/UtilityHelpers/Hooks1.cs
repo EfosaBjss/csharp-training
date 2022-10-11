@@ -1,4 +1,5 @@
 ﻿using AventStack.ExtentReports;
+using AventStack.ExtentReports.Gherkin.Model;
 using AventStack.ExtentReports.Reporter;
 using FrameWorkTemplate.Variable;
 using Microsoft.Extensions.Configuration;
@@ -6,6 +7,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Firefox;
+using System.Reflection;
 using WebDriverManager;
 using WebDriverManager.DriverConfigs.Impl;
 
@@ -22,24 +24,29 @@ namespace FrameWorkTemplate.UtilityHelpers
         static string configsettingpath = System.IO.Directory.GetParent(@"../../../").FullName 
             + Path.DirectorySeparatorChar + "Configuration/configsetting.json";
 
-        //implemention for the extentreport
-        static AventStack.ExtentReports.ExtentReports extent;
-        static AventStack.ExtentReports.ExtentTest feature;
-        AventStack.ExtentReports.ExtentTest scenario, step;
-        static string reportpath = System.IO.Directory.GetParent(@"../../../").FullName
-            + Path.DirectorySeparatorChar + "Results"
-            + Path.DirectorySeparatorChar + "Results" + DateTime.Now.ToString("ddMMyyyy HHmmss");
-            
+       
 
-        
+        //implemention for the extentreport
+         static AventStack.ExtentReports.ExtentReports extent;
+         static AventStack.ExtentReports.ExtentTest feature;
+         AventStack.ExtentReports.ExtentTest scenario, step;
+         static string reportpath = System.IO.Directory.GetParent(@"../../../").FullName
+
+             + Path.DirectorySeparatorChar + "Results"
+             + Path.DirectorySeparatorChar + "Results" + DateTime.Now.ToString("ddMMyyyy HHmmss"); 
+
+
+
 
         [BeforeTestRun]
         public static void BeforeTestRun()
         {
             //Below for extent report generation
-            ExtentHtmlReporter htmlreport = new ExtentHtmlReporter(reportpath);
-            extent = new AventStack.ExtentReports.ExtentReports();
-            extent.AttachReporter(htmlreport);
+               ExtentHtmlReporter htmlreport = new ExtentHtmlReporter(reportpath);
+               extent = new AventStack.ExtentReports.ExtentReports();
+               extent.AttachReporter(htmlreport);   
+
+           
 
             // below are the code for the configuration file
             config = new ConfigSetting();
@@ -85,12 +92,13 @@ namespace FrameWorkTemplate.UtilityHelpers
         public void BeforeStep()
         {
             step = scenario;
+            
         }
 
         [AfterStep]
         public void AfterStep(ScenarioContext context)
         {
-            if(context.TestError == null)
+            if (context.TestError == null)
             {
                 step.Log(Status.Pass, context.StepContext.StepInfo.Text);
             }
@@ -113,7 +121,6 @@ namespace FrameWorkTemplate.UtilityHelpers
             {
                 driver.Quit();
                 driver.Dispose();
-                
             }
         }
     }
